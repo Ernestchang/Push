@@ -187,19 +187,20 @@
 	            Receive push message (registration, push message, push connection state) broadcast.
 	            This receiver class requires the developer to create and inherit the com.huawei.hms.support.api.push.PushReceiver class.
 	            Reference to class in sample code: Com.huawei.hmsagent.HuaweiPushRevicer-->
-        <receiver android:name=".target.huawei.HuaweiPushBroadcastReceiver">
+
+        <!-- xxx.xx.xx为CP自定义的广播名称，比如: com.huawei.hmssample. HUAWEIPushRevicer -->
+        <receiver android:name=".target.huawei.HuaweiPushRevicer" >
             <intent-filter>
-                <!-- 必须,用于接收token | Must， for receiving token -->
+                <!-- 必须,用于接收TOKEN -->
                 <action android:name="com.huawei.android.push.intent.REGISTRATION" />
-                <!-- 必须，用于接收消息 | Must， used to receive messages-->
+                <!-- 必须，用于接收消息 -->
                 <action android:name="com.huawei.android.push.intent.RECEIVE" />
-                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发onEvent回调 | Optional, click the button on the notification bar or the notification bar to trigger the onevent callback -->
+                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发onEvent回调 -->
                 <action android:name="com.huawei.android.push.intent.CLICK" />
-                <!-- 可选，查看push通道是否连接，不查看则不需要 | Optional, query whether the push channel is connected or not -->
+                <!-- 可选，查看PUSH通道是否连接，不查看则不需要 -->
                 <action android:name="com.huawei.intent.action.PUSH_STATE" />
             </intent-filter>
         </receiver>
-
         <!-- 接入HMSSDK PUSH模块需要注册 :接收通道发来的通知栏消息 | The access HMSSDK push module needs to be registered: the notification bar message sent from the receiving channel -->
         <receiver android:name="com.huawei.hms.support.api.push.PushEventReceiver">
             <intent-filter>
