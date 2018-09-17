@@ -2,7 +2,8 @@ package com.bearever.pushdemo;
 
 import android.app.Application;
 
-import com.bearever.push.PushTargetManager;
+import com.ernest.push.PushTargetManager;
+
 
 /**
  * Created by luoming on 2018/5/28.

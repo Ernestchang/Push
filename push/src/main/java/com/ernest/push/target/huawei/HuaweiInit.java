@@ -2,7 +2,7 @@ package com.ernest.push.target.huawei;
 
 import android.app.Application;
 
-import com.bearever.push.target.BasePushTargetInit;
+import com.ernest.push.target.BasePushTargetInit;
 import com.huawei.android.hms.agent.HMSAgent;
 
 /**

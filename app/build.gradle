@@ -5,7 +5,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.bearever.pushdemo"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -14,12 +14,12 @@ android {
     }
 
     signingConfigs {
-        debug {
-            keyAlias 'pushdemo'
-            keyPassword '123456'
-            storeFile file('./PushDemo/pushdemo.jks')
-            storePassword '123456'
-        }
+//        debug {
+//            keyAlias 'pushdemo'
+//            keyPassword '123456'
+//            storeFile file('././pushdemo.jks')
+//            storePassword '123456'
+//        }
     }
 
     buildTypes {
@@ -44,5 +44,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:27.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile project(':oldpush')
+    compile project(':push')
 }
