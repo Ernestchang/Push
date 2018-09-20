@@ -3,7 +3,6 @@ package com.ernest.push.target.xiaomi;
 import android.app.Application;
 
 import com.ernest.push.BuildConfig;
-import com.ernest.push.target.BasePushTargetInit;
 import com.ernest.push.util.ApplicationUtil;
 
 /**
@@ -11,11 +10,10 @@ import com.ernest.push.util.ApplicationUtil;
  * Created by luoming on 2018/5/28.
  */
 
-public class XiaomiInit extends BasePushTargetInit {
+public class XiaomiInit {
     private static final String TAG = "mipush";
 
     public XiaomiInit(Application context) {
-        super(context);
         //注册SDK
         String appId = ApplicationUtil.getMetaData(context, "XMPUSH_APPID");
         String appKey = ApplicationUtil.getMetaData(context, "XMPUSH_APPKEY");

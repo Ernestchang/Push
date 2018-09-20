@@ -2,7 +2,7 @@ package com.bearever.pushdemo;
 
 import android.app.Application;
 
-import com.ernest.push.PushTargetManager;
+import com.ernest.push.PushIntegratedManager;
 
 
 /**
@@ -14,6 +14,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        PushTargetManager.getInstance().init(this);
+        PushIntegratedManager.getInstance().initInApplication(this);
     }
 }

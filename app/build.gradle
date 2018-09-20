@@ -9,31 +9,54 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
     }
 
-    signingConfigs {
-//        debug {
-//            keyAlias 'pushdemo'
-//            keyPassword '123456'
-//            storeFile file('././pushdemo.jks')
-//            storePassword '123456'
-//        }
-    }
 
     buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-
         debug {
-            signingConfig signingConfigs.debug
+            manifestPlaceholders = [
+                    "HUAWEI_PUSH_ID"  : "10798004",//华为推送的AppId
+                    "xiaomiPushAppkey": "57417800 14675",//小米推送的AppKey****请务必在数值中间添加一个空格，否则会发生数值变化****
+                    "xiaomiPushAppId" : "28823037 61517800675",//小米推送的AppID****请务必在数值中间添加一个空格，否则会发生数值变化****
+                    "marketChannel"   : "develops",//渠道
+                    //个推参数说明
+                    GETUI_APP_ID      : "YXF896EN7Y8ZGSwhEsjXF9",
+                    GETUI_APP_KEY     : "BH7tiAhHi26NCjlEq35V1A",
+                    GETUI_APP_SECRET  : "EjzmihpHJdA2KSe3Pt1M67",
+                    // 友盟
+                    UMENG_APPKEY      : "58d9daaca32511734c000964",
+            ]
+            // 显示Log
+            buildConfigField "boolean", "APP_DEBUG", "true"
 
         }
 
+
+        release {
+//            个推参数说明
+            manifestPlaceholders = [
+                    "HUAWEI_PUSH_ID"  : "10798004",//华为推送的AppId
+                    "xiaomiPushAppkey": "57417800 14675",//小米推送的AppKey****请务必在数值中间添加一个空格，否则会发生数值变化****
+                    "xiaomiPushAppId" : "28823037 61517800675",//小米推送的AppID****请务必在数值中间添加一个空格，否则会发生数值变化****
+                    "marketChannel"   : "develops",//渠道
+                    // 个推参数说明
+                    GETUI_APP_ID      : "dQydC51iGv5UDfJOiEWoT1",
+                    GETUI_APP_KEY     : "8xmUgheGcH9fTyJsPs50x",
+                    GETUI_APP_SECRET  : "93IepqS8uC9EBlwSzKb697",
+                    // 友盟
+                    UMENG_APPKEY      : "5880b23f75ca355991000338",
+                    // baidu map
+                    BAIDU_MAP_AK      : "po3v2dqNmeCL5nr4kVqD6p3bIHAFHMIj"
+            ]
+            // 不显示Log
+            buildConfigField "boolean", "APP_DEBUG", "true"
+        }
     }
+
 }
 
 dependencies {
@@ -41,8 +64,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:27.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile project(':push')
 }

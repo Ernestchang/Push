@@ -5,15 +5,15 @@
 
 package com.ernest.push.target.huawei;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.ernest.push.IPushCallback;
 import com.huawei.hms.support.api.push.PushReceiver;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.ernest.push.IPushCallback.ACTION_TOKEN;
+import static com.ernest.push.IPushCallback.ACTION_UPDATEUI;
 
 /**
  * 应用需要创建一个子类继承com.huawei.hms.support.api.push.PushReceiver，
@@ -45,26 +45,12 @@ public class HuaweiPushRevicer extends PushReceiver {
 
     public static final String TAG = "HuaweiPushRevicer";
 
-    public static final String ACTION_UPDATEUI = "action.updateUI";
-    public static final String ACTION_TOKEN = "action.updateToken";
+    //    private static List<IPushCallback> pushCallbacks = new ArrayList<IPushCallback>();
+    private static IPushCallback pushCallbacks;
 
-    private static List<IPushCallback> pushCallbacks = new ArrayList<IPushCallback>();
-    private static final Object CALLBACK_LOCK = new Object();
-
-    public interface IPushCallback {
-        void onReceive(Intent intent);
-    }
 
     public static void registerPushCallback(IPushCallback callback) {
-        synchronized (CALLBACK_LOCK) {
-            pushCallbacks.add(callback);
-        }
-    }
-
-    public static void unRegisterPushCallback(IPushCallback callback) {
-        synchronized (CALLBACK_LOCK) {
-            pushCallbacks.remove(callback);
-        }
+        pushCallbacks = callback;
     }
 
     @Override
@@ -103,42 +89,38 @@ public class HuaweiPushRevicer extends PushReceiver {
     }
 
     public void onEvent(Context context, Event event, Bundle extras) {
-        Intent intent = new Intent();
-        intent.setAction(ACTION_UPDATEUI);
-
-        int notifyId = 0;
-        if (Event.NOTIFICATION_OPENED.equals(event) || Event.NOTIFICATION_CLICK_BTN.equals(event)) {
-            notifyId = extras.getInt(BOUND_KEY.pushNotifyId, 0);
-            if (0 != notifyId) {
-                NotificationManager manager = (NotificationManager) context
-                        .getSystemService(Context.NOTIFICATION_SERVICE);
-                manager.cancel(notifyId);
-            }
-        }
-
-        String message = extras.getString(BOUND_KEY.pushMsgKey);
+//        Intent intent = new Intent();
+//        intent.setAction(ACTION_UPDATEUI);
+//
+//        int notifyId = 0;
+//        if (Event.NOTIFICATION_OPENED.equals(event) || Event.NOTIFICATION_CLICK_BTN.equals(event)) {
+//            notifyId = extras.getInt(BOUND_KEY.pushNotifyId, 0);
+//            if (0 != notifyId) {
+//                NotificationManager manager = (NotificationManager) context
+//                        .getSystemService(Context.NOTIFICATION_SERVICE);
+//                manager.cancel(notifyId);
+//            }
+//        }
+//
+//        String message = extras.getString(BOUND_KEY.pushMsgKey);
+////        intent.putExtra("log", "Received event,notifyId:" + notifyId + " msg:" + message);
 //        intent.putExtra("log", "Received event,notifyId:" + notifyId + " msg:" + message);
-        intent.putExtra("log", "Received event,notifyId:" + notifyId + " msg:" + message);
-        callBack(intent);
+//        callBack(intent);
         super.onEvent(context, event, extras);
     }
 
     @Override
     public void onPushState(Context context, boolean pushState) {
-        Intent intent = new Intent();
-        intent.setAction(ACTION_UPDATEUI);
-//        intent.putExtra("log", "The Push connection status is:" + pushState);
-        intent.putExtra("log", pushState);
-        callBack(intent);
+//        Intent intent = new Intent();
+//        intent.setAction(ACTION_UPDATEUI);
+////        intent.putExtra("log", "The Push connection status is:" + pushState);
+//        intent.putExtra("log", pushState);
+//        callBack(intent);
     }
 
     private static void callBack(Intent intent) {
-        synchronized (CALLBACK_LOCK) {
-            for (IPushCallback callback : pushCallbacks) {
-                if (callback != null) {
-                    callback.onReceive(intent);
-                }
-            }
+        if (pushCallbacks != null) {
+            pushCallbacks.onReceive(intent);
         }
     }
 }
