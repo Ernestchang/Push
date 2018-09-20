@@ -17,12 +17,12 @@ public class PushIntegratedManager {
 
     private static PushIntegratedManager instance;
 
-    private static final String BRAND_HUAWEI = "HUAWEI"; //华为
-    private static final String BRAND_XIAOMI = "Xiaomi"; //小米
 
     public static final int TARGET_GETUI = 0;
     public static final int TARGET_HUAWEI = 1;
     public static final int TARGET_XIAOMI = 2;
+    public static final int TARGET_OPPO = 3;
+    public static final int TARGET_VIVO = 4;
 
     public int mTarget;
 
@@ -34,12 +34,17 @@ public class PushIntegratedManager {
     }
 
     public void initInApplication(Application context) {
-        String mobile_brand = android.os.Build.MANUFACTURER;
-        if (BRAND_HUAWEI.equals(mobile_brand)) {
+        String MARK = android.os.Build.MANUFACTURER.toLowerCase();
+        mTarget = TARGET_GETUI;
+
+        if (MARK.contains("huawei")) {
             mTarget = TARGET_HUAWEI;
             HMSAgent.init(context);
-        } else {
-            mTarget = TARGET_GETUI;
+        } else if (MARK.contains("xiaomi")) {
+        } else if (MARK.contains("oppo")) {
+        } else if (MARK.contains("vivo")) {
+        } else if (MARK.contains("samsung")) {
+        } else if (MARK.contains("smartisan")) {
         }
     }
 
