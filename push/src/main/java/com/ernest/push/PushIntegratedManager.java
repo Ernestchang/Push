@@ -38,8 +38,8 @@ public class PushIntegratedManager {
         mTarget = TARGET_GETUI;
 
         if (MARK.contains("huawei")) {
-            mTarget = TARGET_HUAWEI;
-            HMSAgent.init(context);
+//            mTarget = TARGET_HUAWEI;
+//            HMSAgent.init(context);
         } else if (MARK.contains("xiaomi")) {
         } else if (MARK.contains("oppo")) {
         } else if (MARK.contains("vivo")) {
