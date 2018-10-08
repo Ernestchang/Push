@@ -18,6 +18,10 @@ android {
                 GETUI_APP_ID    : "",
                 GETUI_APP_KEY   : "",
                 GETUI_APP_SECRET: "",
+                xiaomiPushAppkey: "",
+                xiaomiPushAppId : "",
+                applicationId   : ""
+
         ]
     }
 
