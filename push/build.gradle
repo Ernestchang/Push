@@ -20,6 +20,13 @@ android {
                 GETUI_APP_SECRET: "",
         ]
     }
+
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
@@ -29,5 +36,5 @@ dependencies {
     // 个推
     implementation 'com.getui:sdk:2.12.5.0'
     implementation 'com.android.support:support-v4:27.0.2'
-
+    implementation files('libs/MiPush_SDK_Client_3_6_9.jar')
 }

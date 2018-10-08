@@ -2,18 +2,36 @@ package com.ernest.push;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.ernest.push.target.getui.GIntentService;
 import com.ernest.push.target.getui.GPushService;
-import com.ernest.push.target.huawei.HuaweiPushRevicer;
+import com.ernest.push.util.ApplicationUtil;
 import com.huawei.android.hms.agent.HMSAgent;
 import com.huawei.android.hms.agent.common.handler.ConnectHandler;
 import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.igexin.sdk.PushManager;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 
 public class PushIntegratedManager {
+
+
+    //    private static List<IPushCallback> pushCallbacks = new ArrayList<IPushCallback>();
+    private static IPushCallback pushCallback;
+
+    public static void registerPushCallback(IPushCallback callback) {
+        pushCallback = callback;
+    }
+
+    public static void callBack(Intent intent) {
+        if (pushCallback != null) {
+            pushCallback.onReceive(intent);
+        }
+    }
+
 
     private static PushIntegratedManager instance;
 
@@ -38,9 +56,11 @@ public class PushIntegratedManager {
         mTarget = TARGET_GETUI;
 
         if (MARK.contains("huawei")) {
-//            mTarget = TARGET_HUAWEI;
-//            HMSAgent.init(context);
+            mTarget = TARGET_HUAWEI;
+            HMSAgent.init(context);
         } else if (MARK.contains("xiaomi")) {
+            mTarget = TARGET_XIAOMI;
+            initXiaomiPushInApplication(context);
         } else if (MARK.contains("oppo")) {
         } else if (MARK.contains("vivo")) {
         } else if (MARK.contains("samsung")) {
@@ -49,36 +69,19 @@ public class PushIntegratedManager {
     }
 
     public void initInMainActivity(Activity activity, IPushCallback callback) {
-
+        registerPushCallback(callback);
         switch (mTarget) {
             case TARGET_GETUI:
-                GIntentService.registerPushCallback(callback);
                 PushManager.getInstance().initialize(activity.getApplicationContext(), GPushService.class);
                 PushManager.getInstance().registerPushIntentService(activity, GIntentService.class);
                 break;
             case TARGET_HUAWEI:
-                HuaweiPushRevicer.registerPushCallback(callback);
                 initHuaweiPushInActivity(activity);
 
                 break;
             case TARGET_XIAOMI:
                 break;
         }
-    }
-
-
-    public void registerPushCallback(IPushCallback callback) {
-        switch (mTarget) {
-            case TARGET_GETUI:
-                GIntentService.registerPushCallback(callback);
-                break;
-            case TARGET_HUAWEI:
-                HuaweiPushRevicer.registerPushCallback(callback);
-                break;
-            case TARGET_XIAOMI:
-                break;
-        }
-
     }
 
 
@@ -100,6 +103,12 @@ public class PushIntegratedManager {
                 }
             }
         });
+    }
+
+    public void initXiaomiPushInApplication(Context context) {
+        String appId = ApplicationUtil.getMetaData(context, "XMPUSH_APPID").replace(" ", "");
+        String appKey = ApplicationUtil.getMetaData(context, "XMPUSH_APPKEY").replace(" ", "");
+        MiPushClient.registerPush(context, appId, appKey);
     }
 
     public int getTarget() {

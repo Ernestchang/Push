@@ -4,7 +4,7 @@ package com.ernest.push.target.getui;
 import android.content.Context;
 import android.content.Intent;
 
-import com.ernest.push.IPushCallback;
+import com.ernest.push.PushIntegratedManager;
 import com.igexin.sdk.GTIntentService;
 import com.igexin.sdk.PushConsts;
 import com.igexin.sdk.message.FeedbackCmdMessage;
@@ -25,14 +25,6 @@ import static com.ernest.push.IPushCallback.ACTION_UPDATEUI;
  */
 public class GIntentService extends GTIntentService {
 
-
-    //    private static List<IPushCallback> pushCallbacks = new ArrayList<IPushCallback>();
-    private static IPushCallback pushCallbacks;
-    private static final Object CALLBACK_LOCK = new Object();
-
-    public static void registerPushCallback(IPushCallback callback) {
-        pushCallbacks = callback;
-    }
 
     public GIntentService() {
 
@@ -60,7 +52,7 @@ public class GIntentService extends GTIntentService {
             intent.setAction(ACTION_UPDATEUI);
 //            intent.putExtra("log", "Receive a push pass message with the message:" + content);
             intent.putExtra("log", content);
-            callBack(intent);
+            PushIntegratedManager.callBack(intent);
         }
 
     }
@@ -70,7 +62,7 @@ public class GIntentService extends GTIntentService {
         Intent intent = new Intent();
         intent.setAction(ACTION_TOKEN);
         intent.putExtra(ACTION_TOKEN, cid);
-        callBack(intent);
+        PushIntegratedManager.callBack(intent);
     }
 
     @Override
@@ -164,12 +156,6 @@ public class GIntentService extends GTIntentService {
 //
 //        Log.d(TAG, "onReceiveCommandResult -> " + "appid = " + appid + "\ntaskid = " + taskid + "\nactionid = " + actionid + "\nresult = " + result
 //                + "\ncid = " + cid + "\ntimestamp = " + timestamp);
-    }
-
-    private static void callBack(Intent intent) {
-        if (pushCallbacks != null) {
-            pushCallbacks.onReceive(intent);
-        }
     }
 
 

@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.ernest.push.IPushCallback;
+import com.ernest.push.PushIntegratedManager;
 import com.huawei.hms.support.api.push.PushReceiver;
 
 import static com.ernest.push.IPushCallback.ACTION_TOKEN;
@@ -45,14 +45,6 @@ public class HuaweiPushRevicer extends PushReceiver {
 
     public static final String TAG = "HuaweiPushRevicer";
 
-    //    private static List<IPushCallback> pushCallbacks = new ArrayList<IPushCallback>();
-    private static IPushCallback pushCallbacks;
-
-
-    public static void registerPushCallback(IPushCallback callback) {
-        pushCallbacks = callback;
-    }
-
     @Override
     public void onToken(Context context, String tokenIn, Bundle extras) {
         String belongId = extras.getString("belongId");
@@ -60,7 +52,7 @@ public class HuaweiPushRevicer extends PushReceiver {
         Intent intent = new Intent();
         intent.setAction(ACTION_TOKEN);
         intent.putExtra(ACTION_TOKEN, tokenIn);
-        callBack(intent);
+        PushIntegratedManager.callBack(intent);
 
 //        intent = new Intent();
 //        intent.setAction(ACTION_UPDATEUI);
@@ -77,13 +69,13 @@ public class HuaweiPushRevicer extends PushReceiver {
             intent.setAction(ACTION_UPDATEUI);
 //            intent.putExtra("log", "Receive a push pass message with the message:" + content);
             intent.putExtra("log", content);
-            callBack(intent);
+            PushIntegratedManager.callBack(intent);
         } catch (Exception e) {
             Intent intent = new Intent();
             intent.setAction(ACTION_UPDATEUI);
 //            intent.putExtra("log", "Receive push pass message, exception:" + e.getMessage());
             intent.putExtra("log", e.getMessage());
-            callBack(intent);
+            PushIntegratedManager.callBack(intent);
         }
         return false;
     }
@@ -116,11 +108,5 @@ public class HuaweiPushRevicer extends PushReceiver {
 ////        intent.putExtra("log", "The Push connection status is:" + pushState);
 //        intent.putExtra("log", pushState);
 //        callBack(intent);
-    }
-
-    private static void callBack(Intent intent) {
-        if (pushCallbacks != null) {
-            pushCallbacks.onReceive(intent);
-        }
     }
 }
