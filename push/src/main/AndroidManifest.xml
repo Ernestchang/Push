@@ -51,6 +51,30 @@
         <!--********************************** 华为推送 start **********************************-->
 
         <!-- xxx.xx.xx为CP自定义的广播名称，比如: com.huawei.hmssample. HUAWEIPushRevicer -->
+        <!--<activity-->
+        <!--android:name="com.huawei.hms.activity.BridgeActivity"-->
+        <!--android:configChanges="orientation|locale|screenSize|layoutDirection|fontScale"-->
+        <!--android:excludeFromRecents="true"-->
+        <!--android:exported="false"-->
+        <!--android:hardwareAccelerated="true"-->
+        <!--android:theme="@android:style/Theme.Translucent">-->
+        <!--<meta-data-->
+        <!--android:name="hwc-theme"-->
+        <!--android:value="androidhwext:style/Theme.Emui.Translucent" />-->
+        <!--</activity>-->
+
+        <activity
+            android:name="com.huawei.android.hms.agent.common.HMSAgentActivity"
+            android:configChanges="orientation|locale|screenSize|layoutDirection|fontScale"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.Translucent">
+            <meta-data
+                android:name="hwc-theme"
+                android:value="androidhwext:style/Theme.Emui.Translucent" />
+        </activity>
+
         <receiver android:name=".target.huawei.HuaweiPushRevicer">
             <intent-filter>
                 <!-- 必须,用于接收TOKEN -->
@@ -123,7 +147,6 @@
             </intent-filter>
         </receiver>
 
-
         <receiver
             android:name="com.ernest.push.target.xiaomi.XiaomiPushReceiver"
             android:exported="true">
@@ -137,15 +160,6 @@
                 <action android:name="com.xiaomi.mipush.ERROR" />
             </intent-filter>
         </receiver>
-
-
-        <meta-data
-            android:name="XMPUSH_APPKEY"
-            android:value="${xiaomiPushAppkey}" />
-
-        <meta-data
-            android:name="XMPUSH_APPID"
-            android:value="${xiaomiPushAppId}" />
         <!--********************************** 小米推送 end **********************************-->
     </application>
 

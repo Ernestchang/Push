@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import com.ernest.push.PushIntegratedManager;
 import com.xiaomi.mipush.sdk.ErrorCode;
@@ -64,35 +65,21 @@ public class XiaomiPushReceiver extends PushMessageReceiver {
 
         Intent intent = new Intent();
         intent.setAction(ACTION_UPDATEUI);
-//            intent.putExtra("log", "Receive a push pass message with the message:" + content);
         intent.putExtra("log", message.getContent());
         PushIntegratedManager.callBack(intent);
-
-//        if (!TextUtils.isEmpty(message.getTopic())) {
-//            mTopic = message.getTopic();
-//        } else if (!TextUtils.isEmpty(message.getAlias())) {
-//            mAlias = message.getAlias();
-//        }
     }
 
     @Override
     public void onNotificationMessageClicked(Context context, MiPushMessage message) {
-//
-//        if (!TextUtils.isEmpty(message.getTopic())) {
-//            mTopic = message.getTopic();
-//        } else if (!TextUtils.isEmpty(message.getAlias())) {
-//            mAlias = message.getAlias();
-//        }
+        Intent intent = new Intent();
+        intent.setAction(ACTION_UPDATEUI);
+        intent.putExtra("log", message.getContent());
+        intent.putExtra("jump", 1);
+        PushIntegratedManager.callBack(intent);
     }
 
     @Override
     public void onNotificationMessageArrived(Context context, MiPushMessage message) {
-
-//        if (!TextUtils.isEmpty(message.getTopic())) {
-//            mTopic = message.getTopic();
-//        } else if (!TextUtils.isEmpty(message.getAlias())) {
-//            mAlias = message.getAlias();
-//        }
     }
 
     @Override
@@ -105,6 +92,7 @@ public class XiaomiPushReceiver extends PushMessageReceiver {
         if (MiPushClient.COMMAND_REGISTER.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mRegId = cmdArg1;
+                Log.e("ernest", "onCommandResult token:" + mRegId);
             }
 
         } else if (MiPushClient.COMMAND_SET_ALIAS.equals(command)) {
@@ -161,6 +149,7 @@ public class XiaomiPushReceiver extends PushMessageReceiver {
                 intent.setAction(ACTION_TOKEN);
                 intent.putExtra(ACTION_TOKEN, cmdArg1);
                 PushIntegratedManager.callBack(intent);
+                Log.e("ernest", "onReceiveRegisterResult token:" + mRegId);
             } else {
             }
         } else {

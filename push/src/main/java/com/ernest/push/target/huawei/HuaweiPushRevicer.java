@@ -5,9 +5,11 @@
 
 package com.ernest.push.target.huawei;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.ernest.push.PushIntegratedManager;
 import com.huawei.hms.support.api.push.PushReceiver;
@@ -53,11 +55,6 @@ public class HuaweiPushRevicer extends PushReceiver {
         intent.setAction(ACTION_TOKEN);
         intent.putExtra(ACTION_TOKEN, tokenIn);
         PushIntegratedManager.callBack(intent);
-
-//        intent = new Intent();
-//        intent.setAction(ACTION_UPDATEUI);
-//        intent.putExtra("log", "belongId is:" + belongId + " Token is:" + tokenIn);
-//        callBack(intent);
     }
 
     @Override
@@ -67,46 +64,33 @@ public class HuaweiPushRevicer extends PushReceiver {
             String content = new String(msg, "UTF-8");
             Intent intent = new Intent();
             intent.setAction(ACTION_UPDATEUI);
-//            intent.putExtra("log", "Receive a push pass message with the message:" + content);
             intent.putExtra("log", content);
             PushIntegratedManager.callBack(intent);
         } catch (Exception e) {
-            Intent intent = new Intent();
-            intent.setAction(ACTION_UPDATEUI);
-//            intent.putExtra("log", "Receive push pass message, exception:" + e.getMessage());
-            intent.putExtra("log", e.getMessage());
-            PushIntegratedManager.callBack(intent);
+            Log.e("log", "Receive push pass message, exception:" + e.getMessage());
         }
         return false;
     }
 
     public void onEvent(Context context, Event event, Bundle extras) {
-//        Intent intent = new Intent();
-//        intent.setAction(ACTION_UPDATEUI);
-//
-//        int notifyId = 0;
-//        if (Event.NOTIFICATION_OPENED.equals(event) || Event.NOTIFICATION_CLICK_BTN.equals(event)) {
-//            notifyId = extras.getInt(BOUND_KEY.pushNotifyId, 0);
-//            if (0 != notifyId) {
-//                NotificationManager manager = (NotificationManager) context
-//                        .getSystemService(Context.NOTIFICATION_SERVICE);
-//                manager.cancel(notifyId);
-//            }
-//        }
-//
-//        String message = extras.getString(BOUND_KEY.pushMsgKey);
-////        intent.putExtra("log", "Received event,notifyId:" + notifyId + " msg:" + message);
-//        intent.putExtra("log", "Received event,notifyId:" + notifyId + " msg:" + message);
-//        callBack(intent);
+        Log.e("ernest", "Receive onEvent pass message");
+
+        int notifyId = 0;
+        if (Event.NOTIFICATION_OPENED.equals(event)) {
+            notifyId = extras.getInt(BOUND_KEY.pushNotifyId, 0);
+            if (0 != notifyId) {
+                NotificationManager manager = (NotificationManager) context
+                        .getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.cancel(notifyId);
+            }
+            String message = extras.getString(BOUND_KEY.pushMsgKey);
+            Log.e("ernest", "Received event,notifyId:" + notifyId + " msg:" + message);
+        }
+
         super.onEvent(context, event, extras);
     }
 
     @Override
     public void onPushState(Context context, boolean pushState) {
-//        Intent intent = new Intent();
-//        intent.setAction(ACTION_UPDATEUI);
-////        intent.putExtra("log", "The Push connection status is:" + pushState);
-//        intent.putExtra("log", pushState);
-//        callBack(intent);
     }
 }

@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.ernest.push.target.getui.GIntentService;
 import com.ernest.push.target.getui.GPushService;
-import com.ernest.push.util.ApplicationUtil;
 import com.huawei.android.hms.agent.HMSAgent;
 import com.huawei.android.hms.agent.common.handler.ConnectHandler;
 import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
@@ -17,7 +19,6 @@ import com.xiaomi.mipush.sdk.MiPushClient;
 
 
 public class PushIntegratedManager {
-
 
     //    private static List<IPushCallback> pushCallbacks = new ArrayList<IPushCallback>();
     private static IPushCallback pushCallback;
@@ -31,7 +32,6 @@ public class PushIntegratedManager {
             pushCallback.onReceive(intent);
         }
     }
-
 
     private static PushIntegratedManager instance;
 
@@ -51,7 +51,8 @@ public class PushIntegratedManager {
         return instance;
     }
 
-    public void initInApplication(Application context) {
+    public void initInApplication(Application context, IPushCallback callback) {
+        registerPushCallback(callback);
         String MARK = android.os.Build.MANUFACTURER.toLowerCase();
         mTarget = TARGET_GETUI;
 
@@ -60,7 +61,7 @@ public class PushIntegratedManager {
             HMSAgent.init(context);
         } else if (MARK.contains("xiaomi")) {
             mTarget = TARGET_XIAOMI;
-            initXiaomiPushInApplication(context);
+//            initXiaomiPushInApplication(context);
         } else if (MARK.contains("oppo")) {
         } else if (MARK.contains("vivo")) {
         } else if (MARK.contains("samsung")) {
@@ -68,8 +69,7 @@ public class PushIntegratedManager {
         }
     }
 
-    public void initInMainActivity(Activity activity, IPushCallback callback) {
-        registerPushCallback(callback);
+    public void initInMainActivity(Activity activity) {
         switch (mTarget) {
             case TARGET_GETUI:
                 PushManager.getInstance().initialize(activity.getApplicationContext(), GPushService.class);
@@ -80,6 +80,9 @@ public class PushIntegratedManager {
 
                 break;
             case TARGET_XIAOMI:
+                // after login, go to this
+                initXiaomiPushInApplication(activity);
+
                 break;
         }
     }
@@ -98,20 +101,35 @@ public class PushIntegratedManager {
                             Log.e("ernest", "getToken:" + rst);
                         }
                     });
-//                    HMSAgent.Push.enableReceiveNormalMsg(true, null);
-//                    HMSAgent.Push.enableReceiveNotifyMsg(true,null);
                 }
             }
         });
     }
 
     public void initXiaomiPushInApplication(Context context) {
-        String appId = ApplicationUtil.getMetaData(context, "XMPUSH_APPID").replace(" ", "");
-        String appKey = ApplicationUtil.getMetaData(context, "XMPUSH_APPKEY").replace(" ", "");
-        MiPushClient.registerPush(context, appId, appKey);
+        String appId = getMetaData(context, "XMPUSH_APPID");
+        String appKey = getMetaData(context, "XMPUSH_APPKEY");
+        Log.e("ernest", "appid:" + appId + ",appKey:" + appKey);
+        if (!TextUtils.isEmpty(appId) && !TextUtils.isEmpty(appKey)) {
+            MiPushClient.registerPush(context, appId.replace(" ", ""), appKey.replace(" ", ""));
+        }
     }
 
     public int getTarget() {
         return mTarget;
+    }
+
+
+    public static String getMetaData(Context context, String key) {
+        ApplicationInfo ai = null;
+        try {
+            ai = context.getPackageManager().getApplicationInfo(context.getPackageName(),
+                    PackageManager.GET_META_DATA);
+            String value = ai.metaData.getString(key);
+            return value;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }
